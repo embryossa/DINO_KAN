@@ -150,4 +150,31 @@ Contributions are welcome! Please fork the repository and create a pull request 
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
+## References
+
+https://www.linkedin.com/feed/update/urn:li:activity:7249107731238780928/
+
+### Models Used
+1. **DINO (Self-Supervised Learning via Knowledge Distillation)**  
+   We used the DINO model for feature extraction.
+   > @inproceedings{caron2021emerging,
+  title={Emerging Properties in Self-Supervised Vision Transformers},
+  author={Caron, Mathilde and Touvron, Hugo and Misra, Ishan and J\'egou, Herv\'e  and Mairal, Julien and Bojanowski, Piotr and Joulin, Armand},
+  booktitle={Proceedings of the International Conference on Computer Vision (ICCV)},
+  year={2021}
+}
+You can find more about DINO and access the pre-trained models via the [official DINO repository](https://github.com/facebookresearch/dino).
+
+3. **KAN: Kolmogorov-Arnold Networks**  
+   We implemented the KAN model as described in the following paper:  
+   > Liu, Ziming, et al. "KAN: Kolmogorov-Arnold Networks." *arXiv preprint* arXiv:2404.19756 (2024).  
+   You can find the implementation of KAN used in this project on [GitHub](https://github.com/rotem154154/kan_classification).
+
+### Datasets Used
+3. **Blastocyst Dataset**  
+   For testing the model on independent data, we used the Blastocyst Dataset. You can access the dataset at the [following link](https://github.com/software-competence-center-hagenberg/Blastocyst-Dataset).
+
+### Acknowledgments
+We acknowledge the authors of the DINO, KAN models, and the Blastocyst Dataset for their contributions and making their work available to the community. All rights to the mentioned models and datasets remain with their respective authors.
+
 
