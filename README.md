@@ -119,12 +119,12 @@ To make predictions on new images, you will need to first extract the features f
 
 ```bash
 .
-├── data/               # Folder for datasets and features
-├── models/             # Folder to save the trained models
-├── scripts/            # Feature extraction, training, and prediction scripts
-├── extract_features.py # Script for DINO feature extraction
+├── data/image_labels.csv   # CSV for datasets and features
+├── kan_image_model.pth     # saved trained models
+├── scripts/                # Feature extraction, training, and prediction scripts
+├── features_extraction.py  # Script for DINO feature extraction
 ├── train_model.py      # Script for training the neural network
-├── predict.py          # Script for running predictions on new data
+├── new_image.py          # Script for running predictions on new data
 └── README.md           # Project documentation
 ```
 
