@@ -93,6 +93,31 @@ python scripts/extract_features.py \
   --dataset_path data/images \
   --save_path data/features.csv
 ```
+**Image Processing Pipeline**
+
+```bash
+transforms.Compose([
+    transforms.Resize(CFG['img_size']),  # 512×384
+    transforms.ToTensor(),
+    transforms.Normalize(
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225]
+    )
+])
+```
+Validation ranges enforced during input:
+
+```bash
+[
+    (1, 6),    # EXP_silver
+    (1, 4),     # ICM_silver 
+    (1, 4),     # TE_silver
+    (0, None),  # COC
+    (0, None),  # MII
+    (18, 50),   # Age
+    (5.0, 20.0) # Endometrial thickness
+]
+```
 
 ### Model Training
 
@@ -129,6 +154,24 @@ python predict_kan.py \
   --features data/new_features.csv \
   --threshold 0.6
 ```
+### Prediction Workflow
+
+```bash
+def forward(self, x, clinical=None):
+    # Image features
+    features = self.backbone(x)  # 1×1024
+    
+    # Morphology classification
+    morph_logits = self.morphology_head(features)  # 1×5
+    
+    # Live birth prediction
+    if clinical is not None:
+        combined = torch.cat([features, clinical], dim=1)  # 1×1031
+        birth_pred = self.live_birth_head(combined)  # 1×1
+        
+    return morph_logits, birth_pred
+```
+
 
 ## Project Structure
 ```
@@ -150,6 +193,19 @@ python predict_kan.py \
 ## Model Architectures
 
 ### Swin Transformer
+
+**Multimodal Fusion Network**
+```python
+Image Input (512×384×3)
+    │
+Swin Transformer Backbone
+    │
+1024-dim Image Embedding ────┐
+                            ├→ Concatenation → Live Birth Prediction Head
+Clinical Data (7 features) ─┘
+    │
+Morphology Classification Head
+```
 
 **Architecture**:
 ```mermaid
@@ -238,5 +294,6 @@ MIT License. See [LICENSE](LICENSE) for details.
 1. Caron et al. (2021) [Emerging Properties in Self-Supervised Vision Transformers](https://arxiv.org/abs/2104.14294)
 2. Liu et al. (2024) [KAN: Kolmogorov-Arnold Networks](https://arxiv.org/abs/2404.19756)
 3. Blastocyst Dataset: [GitHub Repository](https://github.com/software-competence-center-hagenberg/Blastocyst-Dataset)
+4. Wang, et al. (2024) [A generalized AI system for human embryo selection covering the entire IVF cycle via multi-modal contrastive learning] https://doi.org/10.1016/j.patter.2024.100985
 
 ---
