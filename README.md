@@ -22,6 +22,9 @@ The project utilizes Vision Transformer models pre-trained using DINO to extract
 - **DINO** extracts global contextual features by dividing images into patches and using a transformer-based approach.
 - **KAN (Kolmogorov-Arnold Network)** is a neural network architecture that efficiently handles non-linear relationships between features, offering robust performance on the extracted DINO features.
 
+ ## Embryo Prediction with Swin Transformer
+A deep learning model for embryo quality assessment and live birth prediction using morphological analysis and clinical data.
+
 ### Why use DINO?
 DINO models outperform traditional CNNs in scenarios requiring an understanding of global image context, as they rely on a transformer-based attention mechanism rather than local feature extraction typical for CNNs. In biomedical tasks like embryo image classification, DINO captures global structures and fine-grained details, making it superior for feature extraction in such complex tasks.
 
@@ -38,6 +41,9 @@ To run the code, you need the following libraries:
 - numpy
 - pandas
 - matplotlib
+- pytorch_lightning
+- timm
+- Pillow
 
 You can install the necessary dependencies with:
 
@@ -61,6 +67,98 @@ pip install torch torchvision timm scikit-learn numpy pandas matplotlib
 3. Ensure the dataset is prepared (see Usage for details on dataset requirements).
 
 ## Usage
+
+### Features
+5-class morphology grading of embryos
+
+Live birth probability prediction
+
+Multimodal architecture (image + clinical data fusion)
+
+Swin Transformer-based image processing
+
+Interactive CLI for data input
+
+Place your trained .ckpt model file in the models/ directory
+
+Run the prediction script:
+
+bash
+Copy
+python embryo_predictor.py
+Follow the interactive prompts:
+
+Enter the path to embryo image
+
+Input clinical parameters when requested
+
+Example input:
+
+Copy
+EXP_silver (expansion score, 1-6): 3
+ICM_silver (inner cell mass score, 1-4): 2
+...
+### Model Architecture
+Key Components:
+Image Processing Backbone:
+
+Swin Transformer (base configuration)
+
+Input size: 512×384×3
+
+Output: 1024-dim embedding
+
+Multimodal Classifier:
+
+Morphology head: Linear(1024 → 5)
+
+Live birth head:
+
+Linear(1024+7 → 256) → ReLU → Linear(256 → 1)
+Configuration:
+python
+
+CFG = {
+    "img_size": (512, 384)  # Input image dimensions
+}
+### Input Requirements
+Image:
+Format: JPEG/PNG
+
+Color space: RGB
+
+Minimum size: 512×384 pixels
+
+Clinical Parameters:
+Parameter	Range	Type
+EXP_silver	1-6	int
+ICM_silver	1-4	int
+TE_silver	1-4	int
+COC (oocyte count)	≥0	int
+MII (mature oocytes)	≥0	int
+Patient age	18-50	int
+Endometrial thickness	5.0-20.0 mm	float
+
+### Sample Output
+
+Prediction Results:
+Morphology Class: 3
+Live Birth Probability: 65.23%
+
+Morphology Class Probabilities:
+Class 1: 5.12%
+Class 2: 18.45%
+Class 3: 63.21%
+Class 4: 12.01%
+Class 5: 1.21%
+Limitations
+Requires CUDA-enabled GPU for optimal performance
+
+Model performance depends on training data specifics
+
+Image quality significantly affects predictions
+
+Clinical parameters must follow specified ranges
 
 ### Feature Extraction with DINO
 
@@ -141,6 +239,7 @@ During our testing, the neural network trained on DINO-extracted features signif
 
 
 The model successfully identified whether the embryo images were "in-focus," essential for IVF image analysis tasks.
+Note: Before using in clinical settings, ensure proper validation and regulatory compliance. This model is intended for research purposes only.
 
 ## Contributing
 
